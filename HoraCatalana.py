@@ -1,5 +1,4 @@
 from datetime import datetime as dt
-from sys import prefix
 
 class HoraCatalana:
     def __init__(self, _dt = None):
@@ -171,12 +170,9 @@ class HoraCatalana:
 
 
 if __name__ == "__main__":
-    # hc1 = HoraCatalana()
-    # hc2 = HoraCatalana(dt(2015, 1, 1, 12, 30, 59, 0))
-    
     # Test:
     hc = HoraCatalana()
     for _h in range(0, 24):
         for _m in range(0, 60):
-            strtest = "{0:02d}:{1:02d} --> {2}".format(_h, _m, hc.frase(_h, _m))
-            print(strtest)
+            test = "{0:02d}:{1:02d} --> {2}".format(_h, _m, hc.frase(_h, _m))
+            print(test)
