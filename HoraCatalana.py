@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class HoraCatalana:
     """
     Mòdul que retorna l'hora en català en sistema de campanar.
@@ -10,7 +11,7 @@ class HoraCatalana:
     ----------
     >>> horacat : str
         String que conté la hora escrita en català
-    
+
     Methods
     -------
     >>> tic()
@@ -20,14 +21,14 @@ class HoraCatalana:
         Retorna la hora en català amb els valors d'hora i minuts personalitzats
     """
 
-    def __init__(self, dt = None):
+    def __init__(self, dt=None):
         """
         Parameters
         ----------
         >>> dt : datetime
             (Opcional) Inicialitzar HoraCatalana amb un objecte datetime.
             Si no consta, s'inicialitzarà amb l'hora actual.
-            
+
             Exemple:
             >>> from datetime import time
             >>> HoraCatalana( time(12,34) )
@@ -37,7 +38,7 @@ class HoraCatalana:
 
         # Atributs privats
         self.__dt = dt if dt else None
-        
+
         # Variables / Look-up tables
         self.dictHora = {
             0: 'dotze',
@@ -70,10 +71,7 @@ class HoraCatalana:
             0, 1, 2, 3, 4, 5, 6, 8, 9, 53, 54, 55, 56, 57, 58, 59]
 
         # Inicialitza
-        if not dt:
-            self.tic()
-        else:
-            self.__updateFrase()
+        self.tic() if not dt else self.__updateFrase()
 
     # ------------------ #
     # Mètodes públics    #
@@ -99,7 +97,8 @@ class HoraCatalana:
         # 01:00 --> És la una en punt
         # 14:00 --> Són les dues en punt
         if m == 0:
-            txt = "{0} {1}{2} en punt".format(self.__pluralSon(h),prefix, hora)
+            txt = "{0} {1}{2} en punt".format(
+                self.__pluralSon(h), prefix, hora)
 
         # DE __:01 A __:06 I __:08 A __:09 :
         # 01:01 --> És la una i un minut
@@ -112,7 +111,7 @@ class HoraCatalana:
                 self.dictMin[m],
                 self.__pluralMin(m)
             )
-        
+
         # A __:07 :
         # 13:07 --> És mig quart d'una
         # 02:07 --> És mig quart de dues
@@ -159,7 +158,7 @@ class HoraCatalana:
                 'És' if m == 22 else 'Són',
                 self.__quart(m-7)['prefix'],
                 self.__quart(m-7)['q'],
-                prefix, 
+                prefix,
                 hora
             )
 
@@ -184,7 +183,7 @@ class HoraCatalana:
         # DE __:53 A __:59
         # 12:53 --> Falten set minuts per la una
         # 01:59 --> Falta un minut per les dues
-        elif m in range(53,60):
+        elif m in range(53, 60):
             h += 1
             hora = self.__prefixHora(h)['horaText']
             prefix = self.__prefixHora(h)['prefix2']
@@ -212,8 +211,8 @@ class HoraCatalana:
 
     def __updateFrase(self):
         self.horacat = self.frase(
-            h = int("{0:%H}".format( self.__dt )),
-            m = int("{0:%M}".format( self.__dt ))
+            h=int("{0:%H}".format(self.__dt)),
+            m=int("{0:%M}".format(self.__dt))
         )
 
     def __prefixHora(self, _h):
@@ -287,7 +286,6 @@ class HoraCatalana:
         return txt
 
 
-
 # ------------------ #
 # Test               #
 # ------------------ #
@@ -305,6 +303,8 @@ if __name__ == "__main__":
     with open('textdump.txt', 'w', encoding='utf-8') as fd:
         fd.write(textdump)
 
-    hc1 = HoraCatalana( time(12,34) )
+    hc1 = HoraCatalana(time(12, 34))
+    print("Són dos quarts i quatre de dotze?")
     print(hc1)
     hc1.tic()
+    print(hc1)
