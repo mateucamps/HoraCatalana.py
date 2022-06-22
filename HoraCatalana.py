@@ -222,8 +222,3 @@ if __name__ == "__main__":
 
     with open('textdump.txt', 'w', encoding='utf-8') as fd:
         fd.write(textdump)
-
-    # hc = HoraCatalana()
-    # for _h in range(0, 24):
-    #     test = "{0:02d}:{1:02d} --> {2}".format(_h, 0, hc.frase(_h, 0))
-    #     print(test)
