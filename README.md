@@ -24,7 +24,7 @@
 
 ```py
 >>> from datetime import time
->>> t = time(12,34,56)
+>>> t = time(12,34)
 >>> HoraCatalana(t)
 >>> 'Són dos quarts i quatre de dotze'
 ```
