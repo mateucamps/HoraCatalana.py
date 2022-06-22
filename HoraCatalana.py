@@ -78,6 +78,9 @@ class HoraCatalana:
     def pluralFalta(self, m):
         return 'Falta' if m == 1 else 'Falten'
 
+    def pluralSon(self, h):
+        return 'És' if (h == 1) or (h == 13) else 'Són'
+
     def quart(self, m):
         if m not in [15, 30, 45]:
             raise Exception("Minuts no vàlids, no són 15, 30 ni 45")
@@ -108,7 +111,8 @@ class HoraCatalana:
         return txt
 
     def stringPostQuart(self, m, quartPassat, prefix, hora):
-        txt = "Són {0} {1} i {2} {3}{4}".format(
+        txt = "{0} {1} {2} i {3} {4}{5}".format(
+            'És' if quartPassat == 15 else 'Són',
             self.quart(quartPassat)['prefix'],
             self.quart(quartPassat)['q'],
             self.dictMin[m-quartPassat] if (m-quartPassat) != 1 else 'u',
@@ -123,20 +127,36 @@ class HoraCatalana:
             raise Exception("Minut fora del rang 00-59")
 
         txt = None
-        hora = self.prefixHora(h)['horaText']
         prefix = None
+        hora = self.prefixHora(h)['horaText']
 
         if m in self.rangPrefixMinutsPlural:
             prefix = self.prefixHora(h)['prefix2']
         else:
             prefix = self.prefixHora(h)['prefix1']
 
+        # És la una en punt
+        # Són les dues en punt
         if m == 0:
-            txt = "Són {0}{1} en punt".format(prefix, hora)
+            txt = "{0} {1}{2} en punt".format(self.pluralSon(h),prefix, hora)
+
+        # És la una i un minut
+        # Són les dues i dos minuts
         elif m in [1, 2, 3, 4, 5, 6, 8, 9]:
-            txt = "Són {0}{1} i {2} {3}".format(prefix, hora, self.dictMin[m], self.pluralMin(m))
+            txt = "{0} {1}{2} i {3} {4}".format(
+                self.pluralSon(h),
+                prefix,
+                hora,
+                self.dictMin[m],
+                self.pluralMin(m)
+            )
+        
+        # És mig quart d'una
+        # És mig quart de dues
         elif m == 7:
-            txt = "Són mig quart {0}{1}".format(prefix, hora)
+            txt = "És mig quart {0}{1}".format(prefix, hora)
+
+        
         elif m in range(10, 15):
             txt = self.stringPreviQuart(m, 15, prefix, hora)
         elif m in range(23, 30):
@@ -144,9 +164,21 @@ class HoraCatalana:
         elif m in range(38, 45):
             txt = self.stringPreviQuart(m, 45, prefix, hora)
         elif m in [15, 30, 45]:
-            txt = "Són {0} {1} {2}{3}".format(self.quart(m)['prefix'], self.quart(m)['q'], prefix, hora)
+            txt = "{0} {1} {2} {3}{4}".format(
+                'És' if m == 15 else 'Són',
+                self.quart(m)['prefix'],
+                self.quart(m)['q'],
+                prefix,
+                hora
+            )
         elif m in [22, 37, 52]:
-            txt = "Són {0} {1} i mig {2}{3}".format(self.quart(m-7)['prefix'], self.quart(m-7)['q'], prefix, hora)
+            txt = "{0} {1} {2} i mig {3}{4}".format(
+                'És' if m == 22 else 'Són',
+                self.quart(m-7)['prefix'],
+                self.quart(m-7)['q'],
+                prefix, 
+                hora
+            )
         elif m in range(16, 22):
             txt = self.stringPostQuart(m, 15, prefix, hora)
         elif m in range(31, 37):
@@ -156,7 +188,16 @@ class HoraCatalana:
         elif m in range(53,60):
             h += 1
             hora = self.prefixHora(h)['horaText']
-            txt = "{0} {1} {2} per {3}{4}".format(self.pluralFalta(60-m), self.dictMin[60-m], self.pluralMin(60-m), prefix, hora)
+            prefix = self.prefixHora(h)['prefix2']
+
+            txt = "{0} {1} {2} per {3}{4}".format(
+                self.pluralFalta(60-m),
+                self.dictMin[60-m],
+                self.pluralMin(60-m),
+                prefix,
+                hora
+            )
+
         else:
             txt = "ERROR"
 
@@ -172,7 +213,17 @@ class HoraCatalana:
 if __name__ == "__main__":
     # Test:
     hc = HoraCatalana()
+    textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):
-            test = "{0:02d}:{1:02d} --> {2}".format(_h, _m, hc.frase(_h, _m))
-            print(test)
+            text = "{0:02d}:{1:02d} --> {2}".format(_h, _m, hc.frase(_h, _m))
+            textdump += text+'\n'
+            print(text)
+
+    with open('textdump.txt', 'w', encoding='utf-8') as fd:
+        fd.write(textdump)
+
+    # hc = HoraCatalana()
+    # for _h in range(0, 24):
+    #     test = "{0:02d}:{1:02d} --> {2}".format(_h, 0, hc.frase(_h, 0))
+    #     print(test)
