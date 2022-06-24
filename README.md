@@ -26,7 +26,7 @@
 >>> from datetime import time
 >>> t = time(12,34)
 >>> HoraCatalana(t)
->>> 'Són dos quarts i quatre de dotze'
+>>> 'Són dos quarts i quatre d'una'
 ```
 ## +info:
  [geiec.iec.cat](https://geiec.iec.cat/capitol_veure.asp?id_gelc=337&capitol=28)
