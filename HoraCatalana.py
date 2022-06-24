@@ -86,6 +86,8 @@ class HoraCatalana:
 
         txt = None
         prefix = None
+
+        h += 1
         hora = self.__prefixHora(h)['horaText']
 
         if m in self.rangPrefixMinutsPlural:
@@ -97,6 +99,10 @@ class HoraCatalana:
         # 01:00 --> És la una en punt
         # 14:00 --> Són les dues en punt
         if m == 0:
+            h -= 1
+            hora = self.__prefixHora(h)['horaText']
+            prefix = self.__prefixHora(h)['prefix2']
+
             txt = "{0} {1}{2} en punt".format(
                 self.__pluralSon(h), prefix, hora)
 
@@ -104,6 +110,10 @@ class HoraCatalana:
         # 01:01 --> És la una i un minut
         # 14:02 --> Són les dues i dos minuts
         elif m in [1, 2, 3, 4, 5, 6, 8, 9]:
+            h -= 1
+            hora = self.__prefixHora(h)['horaText']
+            prefix = self.__prefixHora(h)['prefix2']
+
             txt = "{0} {1}{2} i {3} {4}".format(
                 self.__pluralSon(h),
                 prefix,
@@ -184,10 +194,6 @@ class HoraCatalana:
         # 12:53 --> Falten set minuts per la una
         # 01:59 --> Falta un minut per les dues
         elif m in range(53, 60):
-            h += 1
-            hora = self.__prefixHora(h)['horaText']
-            prefix = self.__prefixHora(h)['prefix2']
-
             txt = "{0} {1} {2} per {3}{4}".format(
                 self.__pluralFalta(60-m),
                 self.dictMin[60-m],
