@@ -123,33 +123,33 @@ class HoraCatalana:
             )
 
         # A __:07 :
-        # 13:07 --> És mig quart d'una
-        # 02:07 --> És mig quart de dues
+        # 13:07 --> És mig quart de dues
+        # 02:07 --> És mig quart de tres
         elif m == 7:
             txt = "És mig quart {0}{1}".format(prefix, hora)
 
         # DE __:10 A __:14 :
-        # 12:10 --> Falten cinc minuts per un quart de dotze
-        # 00:14 --> Falta un minut per un quart de dotze
+        # 12:10 --> Falten cinc minuts per un quart d'una
+        # 00:14 --> Falta un minut per un quart d'una
         elif m in range(10, 15):
             txt = self.__stringPreviQuart(m, 15, prefix, hora)
 
         # DE __:23 A __:29 :
-        # 00:23 --> Falten set minuts per dos quarts de dotze
-        # 12:29 --> Falta un minut per dos quarts de dotze
+        # 00:23 --> Falten set minuts per dos quarts d'una
+        # 12:29 --> Falta un minut per dos quarts d'una
         elif m in range(23, 30):
             txt = self.__stringPreviQuart(m, 30, prefix, hora)
 
         # DE __:38 A __:44 :
-        # 00:38 --> Falten set minuts per tres quarts de dotze
-        # 12:44 --> Falta un minut per tres quarts de dotze
+        # 00:38 --> Falten set minuts per tres quarts d'una
+        # 12:44 --> Falta un minut per tres quarts d'una
         elif m in range(38, 45):
             txt = self.__stringPreviQuart(m, 45, prefix, hora)
 
         # A __:15, __:30 I __:45 :
-        # 00:15 --> És un quart de dotze
-        # 00:30 --> Són dos quarts de dotze
-        # 00:45 --> Són tres quarts de dotze
+        # 00:15 --> És un quart d'una
+        # 00:30 --> Són dos quarts d'una
+        # 00:45 --> Són tres quarts d'una
         elif m in [15, 30, 45]:
             txt = "{0} {1} {2} {3}{4}".format(
                 'És' if m == 15 else 'Són',
@@ -160,9 +160,9 @@ class HoraCatalana:
             )
 
         # A __:22, __:37 I __:52 :
-        # 12:22 --> És un quart i mig de dotze
-        # 12:37 --> Són dos quarts i mig de dotze
-        # 12:52 --> Són tres quarts i mig de dotze
+        # 12:22 --> És un quart i mig d'una
+        # 12:37 --> Són dos quarts i mig d'una
+        # 12:52 --> Són tres quarts i mig d'una
         elif m in [22, 37, 52]:
             txt = "{0} {1} {2} i mig {3}{4}".format(
                 'És' if m == 22 else 'Són',
@@ -173,20 +173,20 @@ class HoraCatalana:
             )
 
         # DE __:16 A __:21
-        # 13:16 --> És un quart i u d'una
-        # 02:21 --> És un quart i sis de dues
+        # 13:16 --> És un quart i u de dues
+        # 02:21 --> És un quart i sis de tres
         elif m in range(16, 22):
             txt = self.__stringPostQuart(m, 15, prefix, hora)
 
         # DE __:31 A __:36
-        # 01:31 --> Són dos quarts i u d'una
-        # 14:36 --> Són dos quarts i sis de dues
+        # 01:31 --> Són dos quarts i u de dues
+        # 14:36 --> Són dos quarts i sis de tres
         elif m in range(31, 37):
             txt = self.__stringPostQuart(m, 30, prefix, hora)
 
         # DE __:46 A __:51
-        # 01:46 --> Són tres quarts i u d'una
-        # 14:51 --> Són tres quarts i sis de dues
+        # 01:46 --> Són tres quarts i u de dues
+        # 14:51 --> Són tres quarts i sis de tres
         elif m in range(46, 52):
             txt = self.__stringPostQuart(m, 45, prefix, hora)
 
