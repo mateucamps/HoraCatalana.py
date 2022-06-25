@@ -309,8 +309,12 @@ if __name__ == "__main__":
     with open('textdump.txt', 'w', encoding='utf-8') as fd:
         fd.write(textdump)
 
+    print("")
     hc1 = HoraCatalana(time(12, 34))
-    print("Són dos quarts i quatre de dotze?")
-    print(hc1)
+    print("12:34 --> Són dos quarts i quatre d'una?")
+    print("{0:%H:%M} --> {1}".format(time(12,34), hc1))
     hc1.tic()
-    print(hc1)
+    print("")
+    print("Hora actual:")
+    print("{0:%H:%M} --> {1}".format(datetime.now(), hc1))
+    # print(hc1)
