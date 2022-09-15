@@ -15,7 +15,7 @@
 >>> print(hc)
 >>> "Falten set minuts per les set"
 ```
-4. Per actualitzar la hora:
+4. Per actualitzar l'hora:
 ```py
 >>> hc.tic()
 ```
