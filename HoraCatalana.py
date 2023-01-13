@@ -21,7 +21,7 @@ class HoraCatalana:
         Retorna la hora en català amb els valors d'hora i minuts personalitzats
     """
 
-    def __init__(self, dt=None):
+    def __init__(self, dt=None, xarnego=False):
         """
         Parameters
         ----------
@@ -70,8 +70,89 @@ class HoraCatalana:
         self.rangPrefixMinutsPlural = [
             0, 1, 2, 3, 4, 5, 6, 8, 9, 53, 54, 55, 56, 57, 58, 59]
 
+        self.__xarnego = xarnego
+        self.dictHoraXarnego = {
+            1: 'la una',
+            2: 'les dos',
+            3: 'les tres',
+            4: 'les quatre',
+            5: 'les cinc',
+            6: 'les sis',
+            7: 'les set', 
+            8: 'les vuit',
+            9: 'les nou',
+            10: 'les deu',
+            11: 'les onze',
+            00: 'les dotze'
+        }
+
+        self.dictMinXarnego = {
+            1: 'un',
+            2: 'dos',
+            3: 'tres',
+            4: 'quatre',
+            5: 'cinc', 
+            6: 'sis', 
+            7: 'set',
+            8: 'vuit',
+            9: 'nou',
+            10: 'deu',
+            11: 'onze',
+            12: 'dotze',
+            13: 'tretze',
+            14: 'catorze',
+            15: 'quart',
+            16: 'setze',
+            17: 'disset',
+            18: 'divuit',
+            19: 'dinou',
+            20: 'vint',
+            21: 'vint-i-un',
+            22: 'vint-i-dos',
+            23: 'vint-i-tres',
+            24: 'vint-i-quatre',
+            25: 'vint-i-cinc',
+            26: 'vint-i-sis',
+            27: 'vint-i-set',
+            28: 'vint-i-vuit',
+            29: 'vint-i-nou',
+            30: 'mitja',
+            31: 'trenta-un',
+            32: 'trenta-dos',
+            33: 'trenta-tres',
+            34: 'trenta-quatre',
+            35: 'trenta-cinc',
+            36: 'trenta-sis',
+            37: 'trenta-set',
+            38: 'trenta-vuit',
+            39: 'trenta-nou',
+            40: 'quaranta',
+            41: 'quaranta-un',
+            42: 'quaranta-dos',
+            43: 'quaranta-tres',
+            44: 'quaranta-quatre',
+            45: 'tres quarts',
+            46: 'quaranta-sis',
+            47: 'quaranta-set',
+            48: 'quaranta-vuit',
+            49: 'quaranta-nou',
+            50: 'cinquanta',
+            51: 'cinquanta-un',
+            52: 'cinquanta-dos',
+            53: 'cinquanta-tres',
+            54: 'cinquanta-quatre',
+            55: 'cinquanta-cinc',
+            56: 'cinquanta-sis',
+            57: 'cinquanta-set',
+            58: 'cinquanta-vuit',
+            59: 'cinquanta-nou',
+            0: 'en punt'
+        }
+
         # Inicialitza
         self.tic() if not dt else self.__updateFrase()
+
+
 
     # ------------------ #
     # Mètodes públics    #
@@ -84,128 +165,142 @@ class HoraCatalana:
         if m not in range(0, 60):
             raise Exception("Minut fora del rang 00-59")
 
-        txt = None
-        prefix = None
+        if not self.__xarnego:
 
-        h += 1
-        hora = self.__prefixHora(h)['horaText']
+            txt = None
+            prefix = None
 
-        if m in self.rangPrefixMinutsPlural:
-            prefix = self.__prefixHora(h)['prefix2']
-        else:
-            prefix = self.__prefixHora(h)['prefix1']
-
-        # A __:00 :
-        # 01:00 --> És la una en punt
-        # 14:00 --> Són les dues en punt
-        if m == 0:
-            h -= 1
+            h += 1
             hora = self.__prefixHora(h)['horaText']
-            prefix = self.__prefixHora(h)['prefix2']
 
-            txt = "{0} {1}{2} en punt".format(
-                self.__pluralSon(h), prefix, hora)
+            if m in self.rangPrefixMinutsPlural:
+                prefix = self.__prefixHora(h)['prefix2']
+            else:
+                prefix = self.__prefixHora(h)['prefix1']
 
-        # DE __:01 A __:06 I __:08 A __:09 :
-        # 01:01 --> És la una i un minut
-        # 14:02 --> Són les dues i dos minuts
-        elif m in [1, 2, 3, 4, 5, 6, 8, 9]:
-            h -= 1
-            hora = self.__prefixHora(h)['horaText']
-            prefix = self.__prefixHora(h)['prefix2']
+            # A __:00 :
+            # 01:00 --> És la una en punt
+            # 14:00 --> Són les dues en punt
+            if m == 0:
+                h -= 1
+                hora = self.__prefixHora(h)['horaText']
+                prefix = self.__prefixHora(h)['prefix2']
 
-            txt = "{0} {1}{2} i {3} {4}".format(
-                self.__pluralSon(h),
-                prefix,
-                hora,
-                self.dictMin[m],
-                self.__pluralMin(m)
-            )
+                txt = "{0} {1}{2} en punt".format(
+                    self.__pluralSon(h), prefix, hora)
 
-        # A __:07 :
-        # 13:07 --> És mig quart de dues
-        # 02:07 --> És mig quart de tres
-        elif m == 7:
-            txt = "És mig quart {0}{1}".format(prefix, hora)
+            # DE __:01 A __:06 I __:08 A __:09 :
+            # 01:01 --> És la una i un minut
+            # 14:02 --> Són les dues i dos minuts
+            elif m in [1, 2, 3, 4, 5, 6, 8, 9]:
+                h -= 1
+                hora = self.__prefixHora(h)['horaText']
+                prefix = self.__prefixHora(h)['prefix2']
 
-        # DE __:10 A __:14 :
-        # 12:10 --> Falten cinc minuts per un quart d'una
-        # 00:14 --> Falta un minut per un quart d'una
-        elif m in range(10, 15):
-            txt = self.__stringPreviQuart(m, 15, prefix, hora)
+                txt = "{0} {1}{2} i {3} {4}".format(
+                    self.__pluralSon(h),
+                    prefix,
+                    hora,
+                    self.dictMin[m],
+                    self.__pluralMin(m)
+                )
 
-        # DE __:23 A __:29 :
-        # 00:23 --> Falten set minuts per dos quarts d'una
-        # 12:29 --> Falta un minut per dos quarts d'una
-        elif m in range(23, 30):
-            txt = self.__stringPreviQuart(m, 30, prefix, hora)
+            # A __:07 :
+            # 13:07 --> És mig quart de dues
+            # 02:07 --> És mig quart de tres
+            elif m == 7:
+                txt = "És mig quart {0}{1}".format(prefix, hora)
 
-        # DE __:38 A __:44 :
-        # 00:38 --> Falten set minuts per tres quarts d'una
-        # 12:44 --> Falta un minut per tres quarts d'una
-        elif m in range(38, 45):
-            txt = self.__stringPreviQuart(m, 45, prefix, hora)
+            # DE __:10 A __:14 :
+            # 12:10 --> Falten cinc minuts per un quart d'una
+            # 00:14 --> Falta un minut per un quart d'una
+            elif m in range(10, 15):
+                txt = self.__stringPreviQuart(m, 15, prefix, hora)
 
-        # A __:15, __:30 I __:45 :
-        # 00:15 --> És un quart d'una
-        # 00:30 --> Són dos quarts d'una
-        # 00:45 --> Són tres quarts d'una
-        elif m in [15, 30, 45]:
-            txt = "{0} {1} {2} {3}{4}".format(
-                'És' if m == 15 else 'Són',
-                self.__quart(m)['prefix'],
-                self.__quart(m)['q'],
-                prefix,
-                hora
-            )
+            # DE __:23 A __:29 :
+            # 00:23 --> Falten set minuts per dos quarts d'una
+            # 12:29 --> Falta un minut per dos quarts d'una
+            elif m in range(23, 30):
+                txt = self.__stringPreviQuart(m, 30, prefix, hora)
 
-        # A __:22, __:37 I __:52 :
-        # 12:22 --> És un quart i mig d'una
-        # 12:37 --> Són dos quarts i mig d'una
-        # 12:52 --> Són tres quarts i mig d'una
-        elif m in [22, 37, 52]:
-            txt = "{0} {1} {2} i mig {3}{4}".format(
-                'És' if m == 22 else 'Són',
-                self.__quart(m-7)['prefix'],
-                self.__quart(m-7)['q'],
-                prefix,
-                hora
-            )
+            # DE __:38 A __:44 :
+            # 00:38 --> Falten set minuts per tres quarts d'una
+            # 12:44 --> Falta un minut per tres quarts d'una
+            elif m in range(38, 45):
+                txt = self.__stringPreviQuart(m, 45, prefix, hora)
 
-        # DE __:16 A __:21
-        # 13:16 --> És un quart i u de dues
-        # 02:21 --> És un quart i sis de tres
-        elif m in range(16, 22):
-            txt = self.__stringPostQuart(m, 15, prefix, hora)
+            # A __:15, __:30 I __:45 :
+            # 00:15 --> És un quart d'una
+            # 00:30 --> Són dos quarts d'una
+            # 00:45 --> Són tres quarts d'una
+            elif m in [15, 30, 45]:
+                txt = "{0} {1} {2} {3}{4}".format(
+                    'És' if m == 15 else 'Són',
+                    self.__quart(m)['prefix'],
+                    self.__quart(m)['q'],
+                    prefix,
+                    hora
+                )
 
-        # DE __:31 A __:36
-        # 01:31 --> Són dos quarts i u de dues
-        # 14:36 --> Són dos quarts i sis de tres
-        elif m in range(31, 37):
-            txt = self.__stringPostQuart(m, 30, prefix, hora)
+            # A __:22, __:37 I __:52 :
+            # 12:22 --> És un quart i mig d'una
+            # 12:37 --> Són dos quarts i mig d'una
+            # 12:52 --> Són tres quarts i mig d'una
+            elif m in [22, 37, 52]:
+                txt = "{0} {1} {2} i mig {3}{4}".format(
+                    'És' if m == 22 else 'Són',
+                    self.__quart(m-7)['prefix'],
+                    self.__quart(m-7)['q'],
+                    prefix,
+                    hora
+                )
 
-        # DE __:46 A __:51
-        # 01:46 --> Són tres quarts i u de dues
-        # 14:51 --> Són tres quarts i sis de tres
-        elif m in range(46, 52):
-            txt = self.__stringPostQuart(m, 45, prefix, hora)
+            # DE __:16 A __:21
+            # 13:16 --> És un quart i u de dues
+            # 02:21 --> És un quart i sis de tres
+            elif m in range(16, 22):
+                txt = self.__stringPostQuart(m, 15, prefix, hora)
 
-        # DE __:53 A __:59
-        # 12:53 --> Falten set minuts per la una
-        # 01:59 --> Falta un minut per les dues
-        elif m in range(53, 60):
-            txt = "{0} {1} {2} per {3}{4}".format(
-                self.__pluralFalta(60-m),
-                self.dictMin[60-m],
-                self.__pluralMin(60-m),
-                prefix,
-                hora
-            )
+            # DE __:31 A __:36
+            # 01:31 --> Són dos quarts i u de dues
+            # 14:36 --> Són dos quarts i sis de tres
+            elif m in range(31, 37):
+                txt = self.__stringPostQuart(m, 30, prefix, hora)
 
+            # DE __:46 A __:51
+            # 01:46 --> Són tres quarts i u de dues
+            # 14:51 --> Són tres quarts i sis de tres
+            elif m in range(46, 52):
+                txt = self.__stringPostQuart(m, 45, prefix, hora)
+
+            # DE __:53 A __:59
+            # 12:53 --> Falten set minuts per la una
+            # 01:59 --> Falta un minut per les dues
+            elif m in range(53, 60):
+                txt = "{0} {1} {2} per {3}{4}".format(
+                    self.__pluralFalta(60-m),
+                    self.dictMin[60-m],
+                    self.__pluralMin(60-m),
+                    prefix,
+                    hora
+                )
+
+            else:
+                txt = "ERROR"
+
+            return txt
         else:
-            txt = "ERROR"
+            hora_text = self.dictHoraXarnego.get(h%12)
+            min_text = self.dictMinXarnego.get(m)
 
-        return txt
+            plural_minuts = "minut" if m == 1 else "minuts"
+
+            if m == 0:
+                return "Són {0} {1}".format(hora_text, min_text)
+            elif m in [15, 30, 45]:
+                return "Són {0} i {1}".format(hora_text, min_text)
+            else:
+                return "Són {0} i {1} {2}".format(hora_text, min_text, plural_minuts)
 
     # ------------------ #
     # Mètodes privats    #
@@ -298,7 +393,7 @@ class HoraCatalana:
 if __name__ == "__main__":
     from datetime import time
 
-    hc = HoraCatalana()
+    hc = HoraCatalana(xarnego=True)
     textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):
