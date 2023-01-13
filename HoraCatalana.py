@@ -315,6 +315,9 @@ class HoraCatalana:
             elif self.__franja in ['estiu', 'hivern']:
                 txt += " "
                 txt += self.__franjaHoraria(h)
+            elif self.__franja == "auto":
+                #TODO
+                pass
             else:
                 raise Exception("Franja no vàlida: només pot ser 'estiu' o 'hivern'")
 
@@ -444,7 +447,9 @@ class HoraCatalana:
         else:
             return "FRANJA ERROR -- HORA: {}".format(h)
 
-
+    def __franjaHorariaAuto(self):
+        #TODO
+        pass
 
 
 # ------------------ #
