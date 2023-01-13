@@ -28,6 +28,40 @@
 >>> HoraCatalana(t)
 >>> "Són dos quarts i quatre d'una"
 ```
+
+6. També podem indicar quina franja horària volem
+
+```py
+>>> HoraCatalana(franja='hivern')
+>>> "Són tres quarts de set del vespre"
+>>> HoraCatalana(franja='estiu')
+>>> "Són tres quarts de set de la tarda"
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```py
+>>> from datetime import time
+>>> t = time(12,34)
+>>> HoraCatalana(t)
+>>> "Són dos quarts i quatre d'una"
+```
 ## +info:
  [geiec.iec.cat](https://geiec.iec.cat/capitol_veure.asp?id_gelc=337&capitol=28)
 
