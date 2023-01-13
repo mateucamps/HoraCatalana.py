@@ -21,7 +21,7 @@ class HoraCatalana:
         Retorna la hora en català amb els valors d'hora i minuts personalitzats
     """
 
-    def __init__(self, dt=None, xarnego=False):
+    def __init__(self, dt=None, franja = "", xarnego=False):
         """
         Parameters
         ----------
@@ -32,12 +32,34 @@ class HoraCatalana:
             Exemple:
             >>> from datetime import time
             >>> HoraCatalana( time(12,34) )
+        
+        >>> franja : str
+            (Opcional) Mostrar la divisió del dia segons l'època de l'any.
+            Possibles valors són 'estiu' o 'hivern'.
+            Si no s'indica o és un string buit "" no es mostrarà
+            la franja horària.
+
+            Exemple:
+            >>> HoraCatalana( time(18,45), franja='estiu' ) 
+            "Són tres quarts de set de la tarda"
+            
+            >>> HoraCatalana( time(18,45), franja='hivern' ) 
+            "Són tres quarts de set del vespre"
+
+        >>> xarnego : bool
+            (Opcional) Mostrar la hora malament
+
+            Exemple:
+            >>> HoraCatalana( time(12,30), xarnego=True )   
+            Són les dotze i mitja
+
         """
         # Atributs públics
         self.horacat = None
 
         # Atributs privats
         self.__dt = dt if dt else None
+        self.__franja = franja
 
         # Variables / Look-up tables
         self.dictHora = {
@@ -166,7 +188,6 @@ class HoraCatalana:
             raise Exception("Minut fora del rang 00-59")
 
         if not self.__xarnego:
-
             txt = None
             prefix = None
 
@@ -288,6 +309,15 @@ class HoraCatalana:
             else:
                 txt = "ERROR"
 
+            # Franja horària
+            if self.__franja == "":
+                pass
+            elif self.__franja in ['estiu', 'hivern']:
+                txt += " "
+                txt += self.__franjaHoraria(h)
+            else:
+                raise Exception("Franja no vàlida: només pot ser 'estiu' o 'hivern'")
+
             return txt
         else:
             hora_text = self.dictHoraXarnego.get(h%12)
@@ -386,6 +416,36 @@ class HoraCatalana:
         )
         return txt
 
+    def __franjaHoraria(self, h):
+        # Matinada: 01h a 05h
+        if h in range(1, 6):
+            return "de la matinada"
+        # Matí: 06h a 11h
+        elif h in range(6, 12):
+            return "del matí"
+        # Migdia: 12h a 14h
+        elif h in range(12, 15):
+            return "del migdia"
+        # Tarda-estiu: 15h a 19h
+        elif self.__franja == "estiu" and h in range(15, 20):
+            return "de la tarda"
+        # Tarda-hivern: 15h a 18h
+        elif self.__franja == "hivern" and h in range(15, 19):
+            return "de la tarda"
+        # Vespre-estiu: 20h a 22h
+        elif self.__franja == "estiu" and h in range(20, 23):
+            return "del vespre"
+        # Vespre-hivern: 19h a 22h
+        elif self.__franja == "hivern" and h in range(19, 23):
+            return "del vespre"
+        # Nit: 23h a 00h
+        elif h in [23, 24]:
+            return "de la nit"
+        else:
+            return "FRANJA ERROR -- HORA: {}".format(h)
+
+
+
 
 # ------------------ #
 # Test               #
@@ -393,7 +453,7 @@ class HoraCatalana:
 if __name__ == "__main__":
     from datetime import time
 
-    hc = HoraCatalana(xarnego=True)
+    hc = HoraCatalana(franja='hivern')
     textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):
