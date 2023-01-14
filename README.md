@@ -36,6 +36,7 @@
 >>> "Són tres quarts de set del vespre"
 >>> HoraCatalana(franja='estiu')
 >>> "Són tres quarts de set de la tarda"
+>>> HoraCatalana(franja='auto') # Detecta en funció de data actual
 ```
 
 ## +info:

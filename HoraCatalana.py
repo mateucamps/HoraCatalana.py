@@ -35,7 +35,7 @@ class HoraCatalana:
         
         >>> franja : str
             (Opcional) Mostrar la divisió del dia segons l'època de l'any.
-            Possibles valors són 'estiu' o 'hivern'.
+            Possibles valors són 'estiu', 'hivern' o 'auto'.
             Si no s'indica o és un string buit "" no es mostrarà
             la franja horària.
 
@@ -315,11 +315,13 @@ class HoraCatalana:
             elif self.__franja in ['estiu', 'hivern']:
                 txt += " "
                 txt += self.__franjaHoraria(h)
-            elif self.__franja == "auto":
-                #TODO
+            elif self.__franja == 'auto':
+                self.__franjaHorariaAuto()
+                txt += " "
+                txt += self.__franjaHoraria(h)
                 pass
             else:
-                raise Exception("Franja no vàlida: només pot ser 'estiu' o 'hivern'")
+                raise Exception("Franja no vàlida: només pot ser 'estiu', 'hivern' o 'auto'")
 
             return txt
         else:
@@ -448,8 +450,10 @@ class HoraCatalana:
             return "FRANJA ERROR -- HORA: {}".format(h)
 
     def __franjaHorariaAuto(self):
-        #TODO
-        pass
+        if datetime.now().month in [10, 11, 12, 1, 2, 3]:
+            self.__franja = 'hivern'
+        else:
+            self.__franja = 'estiu'
 
 
 # ------------------ #
