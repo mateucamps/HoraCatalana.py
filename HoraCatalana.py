@@ -450,10 +450,11 @@ class HoraCatalana:
             return "FRANJA ERROR -- HORA: {}".format(h)
 
     def __franjaHorariaAuto(self):
-        if datetime.now().month in [10, 11, 12, 1, 2, 3]:
-            self.__franja = 'hivern'
-        else:
+        if datetime.now().month in range (4,10):
             self.__franja = 'estiu'
+        else:
+            self.__franja = 'hivern'
+
 
 
 # ------------------ #
@@ -462,7 +463,7 @@ class HoraCatalana:
 if __name__ == "__main__":
     from datetime import time
 
-    hc = HoraCatalana(franja='hivern')
+    hc = HoraCatalana(franja='auto')
     textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):
