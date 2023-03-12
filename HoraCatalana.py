@@ -463,7 +463,8 @@ class HoraCatalana:
 if __name__ == "__main__":
     from datetime import time
 
-    hc = HoraCatalana(franja='auto')
+    # TEST 1: Totes les hores de 00:00 a 23:59
+    hc = HoraCatalana(franja='auto', xarnego=False)
     textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):
@@ -473,13 +474,16 @@ if __name__ == "__main__":
 
     with open('textdump.txt', 'w', encoding='utf-8') as fd:
         fd.write(textdump)
+    print("")
 
-    print("")
-    hc1 = HoraCatalana(time(12, 34))
-    print("12:34 --> Són dos quarts i quatre d'una?")
+    # TEST 2: Provem hora 12:34
+    hc1 = HoraCatalana(time(12, 34), franja="auto")
+    print("12:34 --> Són dos quarts i quatre d'una del migdia?")
     print("{0:%H:%M} --> {1}".format(time(12,34), hc1))
-    hc1.tic()
     print("")
+    
+    # TEST 3: Provem hora actual:
     print("Hora actual:")
+    hc1.tic()
     print("{0:%H:%M} --> {1}".format(datetime.now(), hc1))
-    # print(hc1)
+    
