@@ -444,7 +444,7 @@ class HoraCatalana:
         elif self.__franja == "hivern" and h in range(19, 23):
             return "del vespre"
         # Nit: 23h a 00h
-        elif h in [23, 24]:
+        elif h in [23, 24, 00]:
             return "de la nit"
         else:
             return "FRANJA ERROR -- HORA: {}".format(h)
