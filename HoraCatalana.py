@@ -21,7 +21,13 @@ class HoraCatalana:
         Retorna la hora en català amb els valors d'hora i minuts personalitzats
     """
 
-    def __init__(self, dt=None, franja = "", xarnego=False):
+    def __init__(
+            self, 
+            dt = None, 
+            franja = "", 
+            prefixFrase = 'son-passen-falten', 
+            xarnego = False
+            ):
         """
         Parameters
         ----------
@@ -46,6 +52,29 @@ class HoraCatalana:
             >>> HoraCatalana( time(18,45), franja='hivern' ) 
             "Són tres quarts de set del vespre"
 
+        >>> prefixFrase : str
+            (Opcional) Tipus de prefix a l'anunciament de la hora.
+            Es pot utilitzar un prefix lliurement, però els especials són:
+
+            (Per defecte) 'son-passen-falten':
+                Utilitza els verbs son, passen i falten.
+            
+            'a':
+                Utilitza la preposició A per anunciar una hora futura.
+
+            '': 
+                No utilitza cap prefix
+
+            Exemple:
+            >>> HoraCatalana( time(18,45), prefixFrase='son-passen-falten' )
+            "Són tres quarts de set de la tarda"
+            
+            >>> HoraCatalana( time(18,45), prefixFrase='a' )
+            "A tres quarts de set de la tarda"
+
+            >>> HoraCatalana( time(18,45), prefixFrase='' )
+            "Tres quarts de set de la tarda"
+
         >>> xarnego : bool
             (Opcional) Mostrar la hora malament
 
@@ -60,6 +89,7 @@ class HoraCatalana:
         # Atributs privats
         self.__dt = dt if dt else None
         self.__franja = franja
+        self.__prefixFrase = prefixFrase
 
         # Variables / Look-up tables
         self.dictHora = {
@@ -207,8 +237,18 @@ class HoraCatalana:
                 hora = self.__prefixHora(h)['horaText']
                 prefix = self.__prefixHora(h)['prefix2']
 
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = self.__pluralSon(h)
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+                
+
                 txt = "{0} {1}{2} en punt".format(
-                    self.__pluralSon(h), prefix, hora)
+                    prefixFrase, prefix, hora)
 
             # DE __:01 A __:06 I __:08 A __:09 :
             # 01:01 --> És la una i un minut
@@ -218,8 +258,17 @@ class HoraCatalana:
                 hora = self.__prefixHora(h)['horaText']
                 prefix = self.__prefixHora(h)['prefix2']
 
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = self.__pluralSon(h)
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+
                 txt = "{0} {1}{2} i {3} {4}".format(
-                    self.__pluralSon(h),
+                    prefixFrase,
                     prefix,
                     hora,
                     self.dictMin[m],
@@ -230,7 +279,17 @@ class HoraCatalana:
             # 13:07 --> És mig quart de dues
             # 02:07 --> És mig quart de tres
             elif m == 7:
-                txt = "És mig quart {0}{1}".format(prefix, hora)
+
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = "És"
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+
+                txt = "{0} mig quart {1}{2}".format(prefixFrase, prefix, hora)
 
             # DE __:10 A __:14 :
             # 12:10 --> Falten cinc minuts per un quart d'una
@@ -255,8 +314,18 @@ class HoraCatalana:
             # 00:30 --> Són dos quarts d'una
             # 00:45 --> Són tres quarts d'una
             elif m in [15, 30, 45]:
+
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = 'És' if m == 15 else 'Són'
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+
                 txt = "{0} {1} {2} {3}{4}".format(
-                    'És' if m == 15 else 'Són',
+                    prefixFrase,
                     self.__quart(m)['prefix'],
                     self.__quart(m)['q'],
                     prefix,
@@ -268,8 +337,18 @@ class HoraCatalana:
             # 12:37 --> Són dos quarts i mig d'una
             # 12:52 --> Són tres quarts i mig d'una
             elif m in [22, 37, 52]:
+
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = 'És' if m == 22 else 'Són'
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+
                 txt = "{0} {1} {2} i mig {3}{4}".format(
-                    'És' if m == 22 else 'Són',
+                    prefixFrase,
                     self.__quart(m-7)['prefix'],
                     self.__quart(m-7)['q'],
                     prefix,
@@ -298,8 +377,18 @@ class HoraCatalana:
             # 12:53 --> Falten set minuts per la una
             # 01:59 --> Falta un minut per les dues
             elif m in range(53, 60):
+
+                if self.__prefixFrase == 'son-passen-falten':
+                    prefixFrase = self.__pluralFalta(60-m)
+                elif self.__prefixFrase == 'a':
+                    prefixFrase = 'A'
+                elif self.__prefixFrase == '':
+                    prefixFrase = ''
+                else:
+                    prefixFrase = self.__prefixFrase
+
                 txt = "{0} {1} {2} per {3}{4}".format(
-                    self.__pluralFalta(60-m),
+                    prefixFrase,
                     self.dictMin[60-m],
                     self.__pluralMin(60-m),
                     prefix,
@@ -308,6 +397,7 @@ class HoraCatalana:
 
             else:
                 txt = "ERROR"
+
 
             # Franja horària
             if self.__franja == "":
@@ -322,6 +412,9 @@ class HoraCatalana:
                 pass
             else:
                 raise Exception("Franja no vàlida: només pot ser 'estiu', 'hivern' o 'auto'")
+
+            if self.__prefixFrase == '':
+                txt = txt[1:].capitalize()
 
             return txt
         else:
@@ -399,8 +492,18 @@ class HoraCatalana:
         return ret
 
     def __stringPreviQuart(self, m, properQuart, prefix, hora):
+
+        if self.__prefixFrase == 'son-passen-falten':
+            prefixFrase = self.__pluralFalta(properQuart-m)
+        elif self.__prefixFrase == 'a':
+            prefixFrase = 'A'
+        elif self.__prefixFrase == '':
+            prefixFrase = ''
+        else:
+            prefixFrase = self.__prefixFrase
+
         txt = "{0} {1} {2} per {3} {4} {5}{6}".format(
-            self.__pluralFalta(properQuart-m),
+            prefixFrase,
             self.dictMin[properQuart-m],
             self.__pluralMin(properQuart-m),
             self.__quart(properQuart)['prefix'],
@@ -411,8 +514,18 @@ class HoraCatalana:
         return txt
 
     def __stringPostQuart(self, m, quartPassat, prefix, hora):
+
+        if self.__prefixFrase == 'son-passen-falten':
+            prefixFrase = 'És' if quartPassat == 15 else 'Són'
+        elif self.__prefixFrase == 'a':
+            prefixFrase = 'A'
+        elif self.__prefixFrase == '':
+            prefixFrase = ''
+        else:
+            prefixFrase = self.__prefixFrase
+
         txt = "{0} {1} {2} i {3} {4}{5}".format(
-            'És' if quartPassat == 15 else 'Són',
+            prefixFrase,
             self.__quart(quartPassat)['prefix'],
             self.__quart(quartPassat)['q'],
             self.dictMin[m-quartPassat] if (m-quartPassat) != 1 else 'u',
@@ -464,7 +577,7 @@ if __name__ == "__main__":
     from datetime import time
 
     # TEST 1: Totes les hores de 00:00 a 23:59
-    hc = HoraCatalana(franja='auto', xarnego=False)
+    hc = HoraCatalana(franja='auto', prefixFrase='son-passen-falten', xarnego=False)
     textdump = ""
     for _h in range(0, 24):
         for _m in range(0, 60):

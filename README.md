@@ -39,6 +39,20 @@
 >>> HoraCatalana(franja='auto') # Detecta en funció de data actual
 ```
 
+7. També podem indicar quin prefix volem utilitzar
+
+Exemple:
+```py            
+>>> HoraCatalana( time(18,45), prefixFrase='son-passen-falten' )
+"Són tres quarts de set de la tarda"
+
+>>> HoraCatalana( time(18,45), prefixFrase='a' )
+"A tres quarts de set de la tarda"
+
+>>> HoraCatalana( time(18,45), prefixFrase='' )
+"Tres quarts de set de la tarda"
+```
+
 ## +info:
  [geiec.iec.cat](https://geiec.iec.cat/capitol_veure.asp?id_gelc=337&capitol=28)
 
