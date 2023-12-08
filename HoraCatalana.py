@@ -202,6 +202,7 @@ class HoraCatalana:
         }
 
         # Inicialitza
+        
         self.tic() if not dt else self.__updateFrase()
 
 
@@ -212,6 +213,7 @@ class HoraCatalana:
     def tic(self):
         self.__dt = datetime.now()
         self.__updateFrase()
+
 
     def frase(self, h, m):
         if m not in range(0, 60):
@@ -413,6 +415,8 @@ class HoraCatalana:
             else:
                 raise Exception("Franja no vàlida: només pot ser 'estiu', 'hivern' o 'auto'")
 
+            # En cas que no hi hagi prefix, retalla el primer espai
+            # i posa la primera lletra en majúscula
             if self.__prefixFrase == '':
                 txt = txt[1:].capitalize()
 
