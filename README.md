@@ -41,7 +41,6 @@
 
 7. També podem indicar quin prefix volem utilitzar
 
-Exemple:
 ```py            
 >>> HoraCatalana( time(18,45), prefixFrase='son-passen-falten' )
 "Són tres quarts de set de la tarda"
