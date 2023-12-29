@@ -54,6 +54,6 @@ Exemple:
 ```
 
 ## +info:
- [geiec.iec.cat](https://geiec.iec.cat/capitol_veure.asp?id_gelc=337&capitol=28)
+ [geiec.iec.cat](https://geiec.iec.cat/text/28.2.2)
 
  [ca.wikipedia.org/wiki/Sistema_horari_català](https://ca.wikipedia.org/wiki/Sistema_horari_catal%C3%A0)
